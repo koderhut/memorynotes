@@ -1,0 +1,6 @@
+github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
+github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
+github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/koderhut/safenotes v0.0.0-20200416084318-634a3da8eb3d h1:027AxvNXwp2HL4zbOXuSs9OF3cXVTh+vOH7dgJf0q6s=
+github.com/koderhut/safenotes v0.0.0-20200416084318-634a3da8eb3d/go.mod h1:a91iARe8Ana+tYvQNyoV0G5z+YHUBiwMsxTk9K4b/m8=
