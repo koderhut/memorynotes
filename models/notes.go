@@ -16,10 +16,11 @@ type Note struct {
 
 var (
 	stored []*Note
+	total uint
 )
 
 func init() {
-
+	total = 0
 }
 
 // GetByID retrieves a note based on it's ID
@@ -37,6 +38,7 @@ func Store(content string) (Note, error) {
 		Date:    time.Now(),
 	}
 	stored = append(stored, &note)
+	total++
 
 	return note, nil
 }
@@ -60,4 +62,8 @@ func searchCollection(id string) (int, *Note, error) {
 	}
 
 	return -1, &Note{}, errors.New("note does not exist")
+}
+
+func Stats() (uint, uint) {
+	return uint(len(stored)), total
 }
