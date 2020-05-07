@@ -1,0 +1,181 @@
+
+### get current stats
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+client.global.set("stored-notes",response.body['stored-notes']);
+client.global.set("total-notes", response.body['total-notes']);
+
+%}
+
+<> 2020-05-07T094250.200.json
+<> 2020-05-07T094232.200.json
+<> 2020-05-07T094038.200.json
+<> 2020-05-07T093954.200.json
+<> 2020-05-07T093731.200.json
+<> 2020-05-07T092216.200.json
+<> 2020-05-07T092136.200.json
+<> 2020-05-07T091934.200.json
+<> 2020-05-07T091816.200.json
+<> 2020-05-07T091646.200.json
+<> 2020-05-07T091528.200.json
+<> 2020-05-07T091357.200.json
+<> 2020-05-07T091221.200.json
+
+
+### add a new note
+POST http://localhost:44666/api/notes
+Content-Type: application/json
+
+{"content":  "this is a secret message"}
+
+> {%
+client.test("note added", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["link-id"] !== "", "Link ID should not be empty")
+})
+%}
+
+<> 2020-05-07T094250-1.200.json
+<> 2020-05-07T094232-1.200.json
+<> 2020-05-07T094038-1.200.json
+<> 2020-05-07T092216-1.200.json
+<> 2020-05-07T092136-1.200.json
+<> 2020-05-07T091935.200.json
+<> 2020-05-07T091816-1.200.json
+<> 2020-05-07T091646-1.200.json
+<> 2020-05-07T091528-1.200.json
+<> 2020-05-07T091357-1.200.json
+<> 2020-05-07T091221-1.200.json
+
+
+### add a second note and store its uid
+POST http://localhost:44666/api/notes
+Content-Type: application/json
+
+{"content":  "this is a secret message2"}
+
+> {%
+client.test("note added", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["link-id"] !== "", "Link ID should not be empty")
+})
+
+client.global.set("uid", response.body["note-id"])
+%}
+
+<> 2020-05-07T094250-2.200.json
+<> 2020-05-07T094232-2.200.json
+<> 2020-05-07T094038-2.200.json
+<> 2020-05-07T092216-2.200.json
+<> 2020-05-07T092136-2.200.json
+<> 2020-05-07T091935-1.200.json
+<> 2020-05-07T091816-2.200.json
+<> 2020-05-07T091647.200.json
+<> 2020-05-07T091528-2.200.json
+<> 2020-05-07T091357-2.200.json
+<> 2020-05-07T091221-2.200.json
+
+
+
+
+### check stats
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+stored = parseInt(client.global.get("stored-notes")) + 2;
+totals = parseInt(client.global.get("total-notes")) + 2;
+
+client.test("Stats", function() {
+    client.assert(response.body["stored-notes"] === stored, "Wrong number of stored notes")
+    client.assert(response.body["total-notes"] === totals, "Wrong number of total notes")
+    // update number of notes
+    client.global.set("stored-notes", response.body['stored-notes'])
+    client.global.set("total-notes", response.body['total-notes'])
+})
+
+%}
+
+<> 2020-05-07T094250-3.200.json
+<> 2020-05-07T094232-3.200.json
+<> 2020-05-07T094038-3.200.json
+<> 2020-05-07T093954-1.200.json
+<> 2020-05-07T093731-1.200.json
+<> 2020-05-07T092216-3.200.json
+<> 2020-05-07T092136-3.200.json
+<> 2020-05-07T091935-2.200.json
+<> 2020-05-07T091817.200.json
+<> 2020-05-07T091647-1.200.json
+<> 2020-05-07T091528-3.200.json
+<> 2020-05-07T091357-3.200.json
+<> 2020-05-07T091221-3.200.json
+
+
+
+###
+GET http://localhost:44666/api/notes/{{uid}}
+Accept: application/json
+
+> {%
+client.test("note content was retrieved", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["content"] === "this is a secret message2", "Note content should not be empty")
+})
+
+%}
+
+
+###
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+stored = parseInt(client.global.get("stored-notes")) - 1;
+totals = parseInt(client.global.get("total-notes"));
+
+client.test("Stats", function() {
+    client.assert(response.body["stored-notes"] === stored, "Wrong number of stored notes")
+    client.assert(response.body["total-notes"] === totals, "Wrong number of total notes")
+    // update number of notes
+    client.global.set("stored-notes", response.body['stored-notes'])
+})
+%}
+
+<> 2020-05-07T094250-5.200.json
+<> 2020-05-07T094232-5.200.json
+<> 2020-05-07T094038-5.200.json
+<> 2020-05-07T093954-2.200.json
+<> 2020-05-07T093731-2.200.json
+<> 2020-05-07T092217-1.200.json
+<> 2020-05-07T092137-1.200.json
+<> 2020-05-07T091817-2.200.json
+<> 2020-05-07T091647-3.200.json
+<> 2020-05-07T091528-5.200.json
+<> 2020-05-07T091357-5.200.json
+<> 2020-05-07T091222-1.200.json
+
+
+
+### Error
+GET http://localhost:44666/api/notes/{{uid}}
+Accept: application/json
+
+> {%
+ client.test("404 note not found", function() {
+     client.assert(response.status === 404, "Response status code should be 404")
+ })
+ %}
+
+<> 2020-05-07T094250.404.json
+<> 2020-05-07T094232.404.json
+<> 2020-05-07T094038.404.json
+<> 2020-05-07T092217.404.json
+<> 2020-05-07T092137.404.json
+<> 2020-05-07T091817.404.json
+<> 2020-05-07T091647.404.json
+<> 2020-05-07T091529.404.json
+<> 2020-05-07T091357.404.json
+<> 2020-05-07T091222.404.json
+

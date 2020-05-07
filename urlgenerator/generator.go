@@ -1,4 +1,4 @@
-package urlgen
+package urlgenerator
 
 import (
 	"fmt"
@@ -16,10 +16,10 @@ func (u *Url) Generate(path string) string {
 	return fmt.Sprintf("%s%s%s%s", u.Scheme, u.Host, u.Prefix, path)
 }
 
-func FromConfig(c config.Context) *Url {
+func FromConfig(c config.Parameters) *Url {
 	return &Url{
-		Scheme: "http://",
-		Host:   c.Domain,
-		Prefix: c.PathPrefix,
+		Scheme: "https://",
+		Host:   c.Web.Domain,
+		Prefix: c.Web.PathPrefix,
 	}
 }
