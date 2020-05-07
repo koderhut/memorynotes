@@ -17,23 +17,23 @@ func TestNewConfigParams(t *testing.T) {
 		name     string
 		params   []string
 		expected expectedResult
-		err 	 string
+		err      string
 	}{
 		{
 			"full ip:port",
-			[]string{"0.0.0.1:44666", "/test", "test.tld"},
+			[]string{"0.0.0.1:44666", "/test", "test.tld", "test.tld"},
 			expectedResult{IP: "0.0.0.1", Port: "44666", Web_PathPrefix: "/test", Web_Domain: "test.tld"},
 			"",
 		},
 		{
 			"no ip",
-			[]string{":44666", "/test", "test.tld"},
+			[]string{":44666", "/test", "test.tld", "test.tld"},
 			expectedResult{IP: "0.0.0.0", Port: "44666", Web_PathPrefix: "/test", Web_Domain: "test.tld"},
 			"",
 		},
 		{
 			"wrong ip",
-			[]string{"_44666", "/test", "test.tld"},
+			[]string{"_44666", "/test", "test.tld", "test.tld"},
 			expectedResult{IP: "", Port: "", Web_PathPrefix: "", Web_Domain: ""},
 			"incorrect IP:Port values provided",
 		},
@@ -41,9 +41,9 @@ func TestNewConfigParams(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2])
+			res, err := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2], tc.params[3])
 
-			if err !=nil && tc.err == "" {
+			if err != nil && tc.err == "" {
 				t.Errorf("Unexpected error during tests: %s", err.Error())
 			}
 
@@ -75,23 +75,23 @@ func TestParameters_Addr(t *testing.T) {
 		name     string
 		params   []string
 		expected string
-		err 	 string
+		err      string
 	}{
 		{
 			"full ip:port",
-			[]string{"0.0.0.1:44666", "/test", "test.tld"},
+			[]string{"0.0.0.1:44666", "/test", "test.tld", "test.tld"},
 			"0.0.0.1:44666",
 			"",
 		},
 		{
 			"no ip",
-			[]string{":44666", "/test", "test.tld"},
+			[]string{":44666", "/test", "test.tld", "test.tld"},
 			"0.0.0.0:44666",
 			"",
 		},
 		{
 			"wrong ip",
-			[]string{"_44666", "/test", "test.tld"},
+			[]string{"_44666", "/test", "test.tld", "test.tld"},
 			"",
 			"missing IP or port information",
 		},
@@ -99,10 +99,10 @@ func TestParameters_Addr(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			cfg, _ := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2])
+			cfg, _ := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2], tc.params[3])
 			res, err := cfg.Addr()
 
-			if err !=nil && tc.err == "" {
+			if err != nil && tc.err == "" {
 				t.Errorf("Unexpected error during tests: %s", err.Error())
 			}
 
@@ -122,35 +122,35 @@ func TestParameters_ParseTLD(t *testing.T) {
 		name     string
 		params   []string
 		expected string
-		err 	 string
+		err      string
 	}{
 		{
 			"full tld:port",
-			[]string{"0.0.0.1:44666", "/test", "test.tld"},
+			[]string{"0.0.0.1:44666", "/test", "test.tld", "test.tld"},
 			"test.tld:44666",
 			"",
 		},
 		{
 			"no port: 80",
-			[]string{":80", "/test", "test.tld"},
+			[]string{":80", "/test", "test.tld", "test.tld"},
 			"test.tld",
 			"",
 		},
 		{
 			"no port: 443",
-			[]string{":443", "/test", "test.tld"},
+			[]string{":443", "/test", "test.tld", "test.tld"},
 			"test.tld",
 			"",
 		},
 		{
 			"wrong ip",
-			[]string{"_44666", "/test", "test.tld"},
+			[]string{"_44666", "/test", "test.tld", "test.tld"},
 			"",
 			"missing port information",
 		},
 		{
 			"no domain",
-			[]string{":44666", "/test", ""},
+			[]string{":44666", "/test", "", "test.tld"},
 			"",
 			"missing domain information",
 		},
@@ -158,10 +158,10 @@ func TestParameters_ParseTLD(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			cfg, _ := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2])
+			cfg, _ := config.NewConfigParams(tc.params[0], tc.params[1], tc.params[2], tc.params[3])
 			res, err := cfg.ParseTLD()
 
-			if err !=nil && tc.err == "" {
+			if err != nil && tc.err == "" {
 				t.Errorf("Unexpected error during tests: %s", err.Error())
 			}
 

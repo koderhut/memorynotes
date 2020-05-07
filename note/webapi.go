@@ -24,7 +24,7 @@ func NewWebApi() *WebApi {
 func (nc WebApi) RegisterRoutes(r *mux.Router) {
 	notes := r.PathPrefix("/notes").Subrouter()
 
-	notes.Name("notes_store").Path("/").Methods(http.MethodPost, http.MethodOptions).HandlerFunc(nc.Store)
+	notes.Name("notes_store").Path("").Methods(http.MethodPost).HandlerFunc(nc.Store)
 	notes.Name("notes_fetch").Path("/{note}").Methods(http.MethodGet).HandlerFunc(nc.Retrieve)
 }
 

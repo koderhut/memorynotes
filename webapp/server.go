@@ -1,12 +1,13 @@
 package webapp
 
 import (
-	"github.com/koderhut/memorynotes/config"
-	"github.com/koderhut/memorynotes/note"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/koderhut/memorynotes/config"
+	"github.com/koderhut/memorynotes/note"
 )
 
 func BootstrapServer(cfg config.Parameters) *http.Server {
@@ -25,7 +26,7 @@ func BootstrapServer(cfg config.Parameters) *http.Server {
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		err := srv.ListenAndServe()
-		if  err != nil && err.Error() != "http: Server closed" {
+		if err != nil && err.Error() != "http: Server closed" {
 			log.Println(err)
 			os.Exit(128)
 		}

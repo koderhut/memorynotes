@@ -9,7 +9,7 @@ type InputMessage struct {
 type LinkMessage struct {
 	Status bool   `json:"complete"`
 	Link   string `json:"link"`
-	Id 	   string `json:"note-id"`
+	Id     string `json:"note-id"`
 }
 
 type ContentMessage struct {
@@ -20,4 +20,10 @@ type ContentMessage struct {
 type ErrorMessage struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
+}
+
+type StatsMessage struct {
+	Status      bool `json:"status"`
+	StoredNotes uint `json:"stored-notes"`
+	TotalNotes  uint `json:"total-notes"`
 }

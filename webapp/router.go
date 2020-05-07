@@ -1,11 +1,16 @@
 package webapp
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
+
 	"github.com/gorilla/mux"
 	"github.com/koderhut/memorynotes/config"
+	"github.com/koderhut/memorynotes/contracts"
 	"github.com/koderhut/memorynotes/stats"
-	"net/http"
 )
 
 var noteStats = stats.New()
@@ -24,8 +29,7 @@ func BootstrapRouter(c *config.Parameters, routing ...WebRouting) *mux.Router {
 		HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 
-			w.Write([]byte(fmt.Sprintf("Stored Notes: %d\n", noteStats.Current)))
-			w.Write([]byte(fmt.Sprintf("Total Notes: %d\n", noteStats.Total)))
+			json.NewEncoder(w).Encode(&contracts.StatsMessage{Status: true, StoredNotes: noteStats.Current, TotalNotes: noteStats.Total})
 		}).
 		Host(fmt.Sprintf("localhost:%s", c.Port))
 
@@ -34,6 +38,8 @@ func BootstrapRouter(c *config.Parameters, routing ...WebRouting) *mux.Router {
 	for _, routerCfg := range routing {
 		routerCfg.RegisterRoutes(api)
 	}
+
+	printRoutes(router)
 
 	return router
 }
@@ -61,4 +67,15 @@ func corsAllowedHost(cors string) mux.MiddlewareFunc {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func printRoutes(r *mux.Router) {
+	log.Println(">>> Registered routes:")
+	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		path, _ := route.GetPathTemplate()
+		methods, _ := route.GetMethods()
+		log.Printf("Route: %s, Methods: %s\n", path, strings.Join(methods, ","))
+		return nil
+	})
+	log.Println(">>>")
 }
